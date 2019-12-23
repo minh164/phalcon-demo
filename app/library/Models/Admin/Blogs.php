@@ -33,10 +33,11 @@ class Blogs extends Model
 
     public function updateAction($id, array $data)
     {
-        return $this->db
+        $blog = $this->db
             ->where("blog_id =".$id)
-            ->update($data)
+            ->from($this->table)
             ->getQuery()
             ->getSingleResult();
+        return $blog->update($data);
     }
 }

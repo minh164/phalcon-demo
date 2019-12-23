@@ -28,7 +28,7 @@
                     <i class="fas fa-times"></i></button>
             </div>
         </div>
-        <form action="{{ route.getUri('admin.blog.update', blog_info.blog_id, 2, 164) }}" method="post" enctype="multipart/form-data">
+        <form action="{{ route.getUri('admin.blog.update', blog_info.blog_id) }}" method="post" enctype="multipart/form-data">
             <div class="card-body">
                 {% if flash.has('error') == true %}
                     <div class="alert alert-danger">
@@ -45,8 +45,7 @@
                         <div class="form-group">
                             <label>Categories</label>
                             <select name="category_id" class="form-control select2" style="width: 100%;">
-                                <option selected="selected">Alabama</option>
-                                <option>Alaska</option>
+                                <option selected="selected">Thể loại 1</option>
                             </select>
                         </div>
                         <!-- /.form-group -->

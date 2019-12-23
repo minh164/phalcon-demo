@@ -5,6 +5,7 @@ namespace Website\Controllers\Admin;
 use Website\Controller;
 use Website\Models\Admin\Blogs;
 use Website\Request\Blog\StoreRequest;
+use Website\Request\Blog\UpdateRequest;
 
 class BlogController extends Controller
 {
@@ -73,7 +74,7 @@ class BlogController extends Controller
     public function updateAction($id)
     {
         $request = $this->request->get();
-        $validate = new StoreRequest();
+        $validate = new UpdateRequest();
 
         // Validate
         $messages = $validate->validateForm($request);
@@ -82,14 +83,13 @@ class BlogController extends Controller
             foreach ($messages as $message) {
                 $this->flash->error($message);
             }
-
         } else {
             // processing store
             try {
                 $image = $this->uploadFile();
                 $author = $this->session->get('admin_info');
 
-                $arrayCreate = [
+                $arrayUpdate = [
                     'title' => $_POST['title'],
                     'content' => $_POST['content'],
                     'category_id' => 1,
@@ -97,10 +97,10 @@ class BlogController extends Controller
                 ];
 
                 if ($image != null) {
-                    $arrayCreate['image'] = $image;
+                    $arrayUpdate['image'] = $image;
                 }
 
-                $result = $this->blogs->updateAction($arrayCreate);
+                $result = $this->blogs->updateAction($id, $arrayUpdate);
                 if ($result) {
                     $this->flash->success('Update blog success!');
                 }
@@ -110,7 +110,7 @@ class BlogController extends Controller
             }
         }
 
-        $redirectRoute = $this->getDI()->get('namedRoute', ['admin.blog.create']);
+        $redirectRoute = $this->getDI()->get('namedRoute', ['admin.blog.edit', ['id'=>$id]]);
 
         return $this->response->redirect($redirectRoute);
     }
@@ -119,7 +119,7 @@ class BlogController extends Controller
     {
         $request = $this->request;
 
-        if ($request->hasFiles() == true) {
+        if ($request->hasFiles('image') == true) {
             $file = $request->getUploadedFiles();
             $rand = rand(0,99).rand(0,99).'.'.$file[0]->getExtension();
             $url = 'images/admin/'.$rand;
