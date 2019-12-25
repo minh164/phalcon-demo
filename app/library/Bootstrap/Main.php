@@ -8,6 +8,7 @@ use Phalcon\Session\Adapter\Files as Session;
 use Phalcon\Session\Factory as SessionFactory;
 use Phalcon\Flash\Session as FlashSession;
 use Website\Helpers\RouteHelper;
+use Phalcon\Config as PhConfig;
 
 /**
  * Bootstrap
@@ -25,10 +26,10 @@ class Main extends AbstractBootstrap
      */
     protected function initRoutes()
     {
-//        require APP_PATH . '/app/config/routes.php';
-        $config     = $this->diContainer->getShared('config');
-        $routes     = $config->get('routes')->toArray();
-        $middleware = $config->get('middleware')->toArray();
+        $routesFile = $this->diContainer->getShared('routesFile');
+
+        $routes     = $routesFile['routes'];
+        $middleware = $routesFile['middleware'];
 
         foreach ($routes as $route) {
             $collection = new PhMicroCollection();
@@ -64,9 +65,9 @@ class Main extends AbstractBootstrap
      * init get name of routes service
      */
     protected function initNamedRoute()
-        {
-        $config = $this->diContainer->getShared('config');
-        $routes = $config->get('routes')->toArray();
+    {
+        $routesFile = $this->diContainer->getShared('routesFile');
+        $routes     = $routesFile['routes'];
 
         $this->diContainer->set('namedRoute', function ($name, array $params = null) use ($routes) {
             foreach ($routes as $route) {

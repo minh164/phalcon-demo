@@ -67,6 +67,7 @@ abstract class AbstractBootstrap
         $this->initLogger();
         $this->initLocale();
         $this->initErrorHandler();
+        $this->initRoutesFile();
         $this->initRoutes();
         $this->initView();
         $this->initAssets();
@@ -360,6 +361,21 @@ abstract class AbstractBootstrap
         $registry->mode          = 'development';
 
         $this->diContainer->setShared('registry', $registry);
+    }
+
+    /**
+     * init read routes file
+     */
+    protected function initRoutesFile()
+    {
+        $fileName = APP_PATH . '/app/config/routes.php';
+        if (true !== file_exists($fileName)) {
+            throw new Exception('Routes file not found');
+        }
+
+        $routeArray = require_once($fileName);
+
+        $this->diContainer->setShared('routesFile', function () use ($routeArray) {return $routeArray;});
     }
 
     /**

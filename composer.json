@@ -42,7 +42,10 @@
     "vlucas/phpdotenv": "^2.4",
     "guzzlehttp/guzzle": "~6.0",
     "swiftmailer/swiftmailer": "^5.4",
-    "dariuszp/cli-progress-bar": "^1.0"
+    "dariuszp/cli-progress-bar": "^1.0",
+    "spatie/fractalistic": "^2.8",
+    "sieuviet/codebase": "dev-develop",
+    "sieuviet/tools": "dev-develop"
   },
   "require-dev": {
     "phpunit/phpunit": "^4.8",
@@ -55,5 +58,17 @@
   "config": {
     "preferred-install": "dist",
     "optimize-autoloader": true
-  }
+  },
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://anonymous:sieuviet123@gitlab.sieuviet-dev.com/sieuviet/erp/codebase",
+      "reference": "develop"
+    },
+    {
+      "type": "git",
+      "url": "https://anonymous:sieuviet123@gitlab.sieuviet-dev.com/nghiavt/tools",
+      "reference": "master"
+    }
+  ]
 }

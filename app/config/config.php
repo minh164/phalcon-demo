@@ -40,73 +40,7 @@ return [
     'google'        => [
         'analytics'       => getenv('GOOGLE_ANALYTICS'),
     ],
-    'routes'        => [
-        [
-            'prefix' => '/admin',
-            'class'   => Website\Controllers\Admin\AuthController::class,
-            'methods' => [
-                'get'      => [
-                    '404' => ['/404' => 'notfoundAction'],
-                    'admin.login' => ['/login'     => 'showLoginFormAction'],
-                    'admin.register' => ['/register'         => 'showRegisterFormAction'],
-                    'admin.logout' => ['/logout' => 'logoutAction']
-                ],
-                'post'      => [
-                    'admin.login.submit' => ['/submit/login'         => 'submitLoginAction'],
-                    'admin.register.submit' => ['/submit/register'         => 'submitRegisterAction']
-                ],
-            ],
-        ],
-        [
-            'prefix' => '/admin/blog',
-            'class'   => Website\Controllers\Admin\BlogController::class,
-            'methods' => [
-                'get'      => [
-                    'admin.blog.create' => ['/create'     => 'createAction'],
-                    'admin.blog.edit' => ['/edit/{id}'     => 'editAction']
-                ],
-                'post'      => [
-                    'admin.blog.store' => ['/store'     => 'storeAction'],
-                    'admin.blog.update' => ['/update/{id}'     => 'updateAction']
-                ],
-            ],
-        ],
-        [
-            'prefix' => '/admin',
-            'class'   => Website\Controllers\Admin\DashboardController::class,
-            'methods' => [
-                'get'      => [
-                    'admin.dashboard' => ['/'     => 'indexAction'],
-                ],
-            ],
-        ],
-    ],
-    'middleware'    => [
-//        [
-//            'event' => 'before',
-//            'class' => Website\Middleware\EnvironmentMiddleware::class,
-//        ],
-//        [
-//            'event' => 'before',
-//            'class' => Website\Middleware\NotFoundMiddleware::class,
-//        ],
-//        [
-//            'event' => 'before',
-//            'class' => Website\Middleware\RedirectMiddleware::class,
-//        ],
-//        [
-//            'event' => 'before',
-//            'class' => Website\Middleware\AssetsMiddleware::class,
-//        ],
-        [
-            'event' => 'before',
-            'class' => Website\Middleware\AuthenticateMiddleware::class,
-        ],
-        [
-            'event' => 'after',
-            'class' => Website\Middleware\ViewMiddleware::class,
-        ]
-    ],
+
     'languages'     => [
         'ar' => 'Arabic',
         'bg' => 'Bulgarian',

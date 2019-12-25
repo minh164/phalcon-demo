@@ -3,9 +3,11 @@
 namespace Website\Controllers\Admin;
 
 use Website\Controller;
-use Website\Models\Admin\Blogs;
+use Website\Repositories\Admin\BlogRepo;
 use Website\Request\Blog\StoreRequest;
 use Website\Request\Blog\UpdateRequest;
+use Spatie\Fractalistic\Fractal;
+use Website\Transformers\Admin\BlogTrans;
 
 class BlogController extends Controller
 {
@@ -13,7 +15,19 @@ class BlogController extends Controller
 
     public function onConstruct()
     {
-        $this->blogs = new Blogs();
+        $this->blogs = new BlogRepo();
+    }
+
+    public function listAction()
+    {
+        $blogs = $this->blogs->getAll();
+
+        $response = Fractal::create()
+            ->collection($blogs->toArray())
+            ->transformWith(BlogTrans::class)
+            ->toArray();
+
+        return $this->response->setJsonContent($response);
     }
 
     public function createAction()
@@ -33,28 +47,22 @@ class BlogController extends Controller
             foreach ($messages as $message) {
                 $this->flash->error($message);
             }
-
         } else {
             // processing store
-            try {
-                $image = $this->uploadFile();
-                $author = $this->session->get('admin_info');
+            $image = $this->uploadFile();
+            $author = $this->session->get('admin_info');
 
-                $arrayCreate = [
-                    'title' => $_POST['title'],
-                    'content' => $_POST['content'],
-                    'category_id' => 1,
-                    'author' => $author->id,
-                    'image' => $image,
-                ];
+            $arrayCreate = [
+                'title' => $_POST['title'],
+                'content' => $_POST['content'],
+                'category_id' => 1,
+                'author' => $author->id,
+                'image' => $image,
+            ];
 
-                $result = $this->blogs->createAction($arrayCreate);
-                if ($result) {
-                    $this->flash->success('Create blog success!');
-                }
-
-            } catch (\Exception $exception) {
-                echo $exception->getMessage(); die();
+            $result = $this->blogs->createAction($arrayCreate);
+            if ($result) {
+                $this->flash->success('Create blog success!');
             }
         }
 
@@ -85,28 +93,23 @@ class BlogController extends Controller
             }
         } else {
             // processing store
-            try {
-                $image = $this->uploadFile();
-                $author = $this->session->get('admin_info');
+            $image = $this->uploadFile();
+            $author = $this->session->get('admin_info');
 
-                $arrayUpdate = [
-                    'title' => $_POST['title'],
-                    'content' => $_POST['content'],
-                    'category_id' => 1,
-                    'author' => $author->id,
-                ];
+            $arrayUpdate = [
+                'title' => $_POST['title'],
+                'content' => $_POST['content'],
+                'category_id' => 1,
+                'author' => $author->id,
+            ];
 
-                if ($image != null) {
-                    $arrayUpdate['image'] = $image;
-                }
+            if ($image != null) {
+                $arrayUpdate['image'] = $image;
+            }
 
-                $result = $this->blogs->updateAction($id, $arrayUpdate);
-                if ($result) {
-                    $this->flash->success('Update blog success!');
-                }
-
-            } catch (\Exception $exception) {
-                echo $exception->getMessage(); die();
+            $result = $this->blogs->updateAction($id, $arrayUpdate);
+            if ($result) {
+                $this->flash->success('Update blog success!');
             }
         }
 
@@ -118,18 +121,14 @@ class BlogController extends Controller
     public function uploadFile()
     {
         $request = $this->request;
-
-        if ($request->hasFiles('image') == true) {
-            $file = $request->getUploadedFiles();
-            $rand = rand(0,99).rand(0,99).'.'.$file[0]->getExtension();
-            $url = 'images/admin/'.$rand;
-            $file[0]->moveTo($url);
-
-            return $url;
-        } else {
+        if ($request->hasFiles('image') != true) {
             return null;
         }
+
+        $file = $request->getUploadedFiles();
+        $rand = rand(0, 99) . rand(0, 99) . '.' . $file[0]->getExtension();
+        $url = 'images/admin/' . $rand;
+        $file[0]->moveTo($url);
+        return $url;
     }
-
-
 }
