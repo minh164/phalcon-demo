@@ -6,6 +6,7 @@ use Website\Controller;
 use Website\Models\Admin\Admins;
 use Website\Request\Auth\registerRequest;
 use Website\Request\Auth\loginRequest;
+use Firebase\JWT\JWT;
 
 class AuthController extends Controller
 {
@@ -37,7 +38,9 @@ class AuthController extends Controller
                 $admin = $this->admins->credential($_POST);
                 // success
                 if ($admin != false) {
-                    $this->session->set('admin_info', $admin);
+//                    $this->session->set('admin_info', $admin);
+                    $this->registerJwt($_POST['email']);
+
                     $redirectRoute = $this->getDI()->get('namedRoute', ['admin.dashboard']);
 
                     return $this->response->redirect($redirectRoute);
@@ -103,5 +106,19 @@ class AuthController extends Controller
 
             return $this->response->redirect($route);
         }
+    }
+
+    public function registerJwt($email)
+    {
+        $key = 'demophalconkey';
+        $header = [
+            'alg' => 'HS256',
+            'typ' => 'JWT'
+        ];
+        $payload = [
+            'iat' => time(),
+            'user_email' => $email
+        ];
+        return $jwt = JWT::encode($payload, $key);
     }
 }

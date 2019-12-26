@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "22978bcf6b5e3cb2b948300c1dd58bbb",
+    "content-hash": "74b25663133ec4f93dd8d08907f2ae40",
     "packages": [
         {
             "name": "dariuszp/cli-progress-bar",
@@ -819,7 +819,7 @@
             "source": {
                 "type": "git",
                 "url": "https://anonymous:sieuviet123@gitlab.sieuviet-dev.com/nghiavt/tools",
-                "reference": "b16e501862b016db47c6d9c9003685ffcfb9b5bc"
+                "reference": "c08d3a8069766d5211d99e0a48dc2d3beff64e96"
             },
             "require": {
                 "php": ">= 7.0"
@@ -831,7 +831,7 @@
                 }
             },
             "description": "A common PHP libraries",
-            "time": "2019-11-28T08:45:43+00:00"
+            "time": "2019-12-25T04:22:57+00:00"
         },
         {
             "name": "spatie/fractalistic",
