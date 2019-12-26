@@ -8,6 +8,7 @@ use Website\Request\Blog\StoreRequest;
 use Website\Request\Blog\UpdateRequest;
 use Spatie\Fractalistic\Fractal;
 use Website\Transformers\Admin\BlogTrans;
+use SVCodebase\Validators\BaseValidate;
 
 class BlogController extends Controller
 {
@@ -20,33 +21,29 @@ class BlogController extends Controller
 
     public function listAction()
     {
-        $blogs = $this->blogs->getAll();
+        $request = $this->request->get();
 
-        $result = Fractal::create()
-            ->collection($blogs->toArray())
-            ->transformWith(function ($blog) {
-                return [
-                    'blog_id' => $blog['blog_id'],
-                    'title' => $blog['title'],
-                    'created_at' => date("d-m H:i", $blog['created_at'])
-                ];
-            })
+        $blogs = $this->blogs->getAll($request);
+
+        $blogs->items = Fractal::create()
+            ->collection($blogs->items->toArray())
+            ->transformWith(new BlogTrans())
             ->toArray();
 
-        return $this->outputSuccess($result);
+        return $this->outputSuccess($blogs);
     }
 
     public function storeAction()
     {
         $request = $this->request->get();
-        $validate = new StoreRequest();
 
-        // Validate
-        $messages = $validate->validateForm($request);
-        if (count($messages) > 0) {
-            // add error
-            return $this->outputError($messages);
-        }
+        $rules = [
+            'title' => 'required|max:160',
+            'content' => 'required',
+            'category_id' => 'required',
+        ];
+
+        BaseValidate::validator($request, $rules);
 
         // processing store
         $image = $this->uploadFile();
@@ -89,14 +86,14 @@ class BlogController extends Controller
     public function updateAction($id)
     {
         $request = $this->request->get();
-        $validate = new UpdateRequest();
 
-        // Validate
-        $messages = $validate->validateForm($request);
-        if (count($messages) > 0) {
-            // add error
-            return $this->outputError($messages);
-        }
+        $rules = [
+            'title' => 'required|max:160',
+            'content' => 'required',
+            'category_id' => 'required',
+        ];
+
+        BaseValidate::validator($request, $rules);
 
         // processing store
         $image = $this->uploadFile();
@@ -162,18 +159,5 @@ class BlogController extends Controller
         $response['data'] = $result;
 
         return $this->outputJSON($response);
-    }
-
-    public function outputError($result)
-    {
-        $errorArray = [];
-        foreach ($result as $err) {
-            $errorArray[] = $err->getMessage();
-        }
-        $response['code'] = 422;
-        $response['msg'] = 'Error!';
-        $response['data'] = $errorArray;
-
-        return $this->outputJSON($response, 422);
     }
 }

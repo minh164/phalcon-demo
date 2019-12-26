@@ -8,16 +8,25 @@ use Website\Models\Admin\BlogsBuilder;
 
 class BlogRepo extends Injectable
 {
-    protected $blogBuilder;
 
-    public function __construct()
-    {
-        $this->blogBuilder = BlogsBuilder::buildBlogsModel();
-    }
 
-    public function getAll()
+    public function getAll(array $filters = null)
     {
-        return $this->blogBuilder->get();
+        /** @var \SVCodebase\Models\BuilderAdvance $m */
+        $m = BlogsBuilder::buildBlogsModel();
+
+        if (!empty($filters['title'])) {
+            $m->wheres('title', 'like', '%'.$filters['title'].'%');
+        }
+
+        if (!empty($filters['from_time']) && !empty($filters['to_time'])) {
+            $fromTime = strtotime($filters['from_time']);
+            $toTime = strtotime($filters['to_time']);
+
+            $m->betweenWhere('created_at', date('Y/m/d H:i:s', $fromTime), date('Y/m/d H:i:s', $toTime));
+        }
+
+        return $m->limit(5)->paginate();
 
 //        return $this->modelsManager->createBuilder()
 //            ->from(Blogs::class)
@@ -27,27 +36,32 @@ class BlogRepo extends Injectable
 
     public function getOne($id)
     {
-        return $this->blogBuilder->where("blog_id =".$id)->get();
+        $m = BlogsBuilder::buildBlogsModel();
+
+        return $m->where("blog_id =".$id)->get();
     }
 
     public function createAction(array $data)
     {
-        $blog = $this->blogBuilder->newModel();
+        $m = BlogsBuilder::buildBlogsModel();
+        $blog = $m->newModel();
 
         return $blog->create($data);
     }
 
     public function updateAction($id, array $data)
     {
-        return $this->blogBuilder
-            ->where("blog_id =".$id)
+        $m = BlogsBuilder::buildBlogsModel();
+
+        return $m->where("blog_id =".$id)
             ->update($data);
     }
 
     public function deleteAction($id)
     {
-        return $this->blogBuilder
-            ->where("blog_id =".$id)
+        $m = BlogsBuilder::buildBlogsModel();
+
+        return $m->where("blog_id =".$id)
             ->delete();
     }
 }
