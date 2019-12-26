@@ -100,12 +100,11 @@ class AuthController extends Controller
 
     public function logoutAction()
     {
-        if ($this->session->has('admin_info')) {
-            $this->session->remove('admin_info');
-            $route = $this->getDI()->get('namedRoute', ['admin.login']);
-
-            return $this->response->redirect($route);
-        }
+//        if ($this->session->has('admin_info')) {
+//            $this->session->remove('admin_info');
+//        }
+        $route = $this->getDI()->get('namedRoute', ['admin.login']);
+        return $this->response->redirect($route);
     }
 
     public function registerJwt($email)
