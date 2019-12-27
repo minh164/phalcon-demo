@@ -49,6 +49,23 @@ return [
                     'api.admin.blog.delete' => ['/delete/{id}' => 'destroyAction']
                 ]
             ],
+        ],
+        [
+            'prefix' => '/api/admin/category',
+            'class' => Website\Controllers\Api\Admin\CategoryController::class,
+            'methods' => [
+                'get' => [
+                    'api.admin.category.list' => ['/list' => 'listAction'],
+//                    'api.admin.blog.edit' => ['/show/{id}' => 'showAction'],
+                ],
+                'post' => [
+//                    'api.admin.blog.store' => ['/store' => 'storeAction'],
+//                    'api.admin.blog.update' => ['/update/{id}' => 'updateAction']
+                ],
+                'delete' => [
+//                    'api.admin.blog.delete' => ['/delete/{id}' => 'destroyAction']
+                ]
+            ],
         ]
     ],
     'middleware' => [

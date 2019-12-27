@@ -4,8 +4,6 @@ namespace Website\Controllers\Api\Admin;
 
 use Website\Controller;
 use Website\Repositories\Admin\BlogRepo;
-use Website\Request\Blog\StoreRequest;
-use Website\Request\Blog\UpdateRequest;
 use Spatie\Fractalistic\Fractal;
 use Website\Transformers\Admin\BlogTrans;
 use SVCodebase\Validators\BaseValidate;
